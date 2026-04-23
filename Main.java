@@ -4,8 +4,8 @@ import java.util.ArrayList;
 public class Main {
     public static void main(String[] args) {
 
-        List<Integer> player1 = new ArrayList<>();
-        List<Integer> player2 = new ArrayList<>();
+        Player player1 = new Player();
+        Player player2 = new Player();
         // Create an instance of the Deck class
         NumberedDeck myDeck = new NumberedDeck();
 
@@ -22,19 +22,19 @@ public class Main {
         myDeck.showDeck();
 
         //Deal for player 1 and 2 alternatingly:
-        player1.add(myDeck.deal());
-        player2.add(myDeck.deal());
-        player1.add(myDeck.deal());
-        player2.add(myDeck.deal());
+        player1.hit(myDeck);
+        player2.hit(myDeck);
+        player1.hit(myDeck);
+        player2.hit(myDeck);
 
         //view all decks:
         System.out.println("Remaining in deck: ");
         myDeck.showDeck();
             //player1:
         System.out.println("Player1 hand:");
-        System.out.println(player1);
+        player1.viewHand();
             //player2:
         System.out.println("Player2 hand:");
-        System.out.println(player2);
+        player2.viewHand();
     }
 }
