@@ -22,4 +22,12 @@ public class Player{
 	public void viewHand(){
 		System.out.println(this.hand);
 	}
+
+	public void showNotFrst(){
+		List<Integer> temp = new ArrayList<>();
+		for (int i = 1 ; i < hand.size(); i++) {
+			temp.add(hand.get(i));
+		}
+		System.out.println(temp);
+	}
 }
