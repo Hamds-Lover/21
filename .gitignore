@@ -1,5 +1,6 @@
 # Ignore everything
 *
+Extras.java
 
 # Allow directories
 !*/
