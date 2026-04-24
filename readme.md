@@ -1,12 +1,3 @@
-I can't directly send a file for download, but here's how you can get it onto your machine:
-
-1. **Copy the content** from the code block below.
-2. **Paste** it into a new text file.
-3. **Save** the file as `README.md` (make sure the extension is `.md`, not `.txt`).
-
-Here's the content again (same as above):
-
-```markdown
 # 21 - A Blackjack‑Inspired Card Game
 
 A console‑based implementation of the “21” minigame from *Resident Evil 7*, built in Java.  
@@ -90,10 +81,3 @@ Inspired by the “21” DLC from *Resident Evil 7*. Built as a learning project
 ---
 
 **Enjoy the game – and don’t bust!**
-```
-
-To save it on most operating systems:
-- **Windows**: Notepad → paste → "Save as" → select "All files" → name it `README.md`.
-- **macOS / Linux**: Any text editor → paste → save as `README.md`.
-
-Would you like me to adjust anything in the README before you save it?
