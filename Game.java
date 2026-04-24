@@ -19,44 +19,77 @@ public class Game {
         cpu.hit(myDeck);
 
         Scanner scanner = new Scanner(System.in);
+        boolean playerStood = false;
+        boolean cpuStood = false;
 
-        // Player turn
-        while (true) {
-            System.out.print("CPU hand: ");
-            cpu.showHiddenHand();
-            p1.viewHand();
-            System.out.println("Your hand value: " + p1.calcHandVal());
-            System.out.println("1 - Hit");
-            System.out.println("2 - Stand");
-            System.out.print("Enter choice: ");
-            int choice = scanner.nextInt();
+        // Main game loop – alternate turns until both stand or bust
+        while (!playerStood || !cpuStood) {
+            // Player's turn (if hasn't stood)
+            if (!playerStood) {
+                System.out.print("CPU hand: ");
+                cpu.showHiddenHand();
+                System.out.print("Your hand: ");
+                p1.viewHand();
+                System.out.println("Your hand value: " + p1.calcHandVal());
+                System.out.println("1 - Hit");
+                System.out.println("2 - Stand");
+                System.out.print("Enter choice: ");
+                int choice = scanner.nextInt();
 
-            if (choice == 1) {
-                System.out.println("You drew a card.");
-                p1.hit(myDeck);
-                int pVal = p1.calcHandVal();
-                if (pVal > 21) {
-                    System.out.println("Your hand: " + pVal + " → BUST!");
-                    System.out.println("You lose!");
-                    scanner.close();
-                    return;
+                if (choice == 1) {
+                    System.out.println("You drew a card.");
+                    p1.hit(myDeck);
+                    int pVal = p1.calcHandVal();
+                    if (pVal > 21) {
+                        System.out.println("Your hand: " + pVal + " → BUST!");
+                        System.out.println("You lose!");
+                        scanner.close();
+                        return;
+                    }
+                } else {
+                    playerStood = true;
+                    System.out.println("You stand.");
                 }
-            } else {
-                break;
+            }
+
+            // CPU's turn (if hasn't stood and game still active)
+            if (!cpuStood && !playerStood) { // if player just stood, CPU still plays
+                // Recalculate player's visible total (may have changed after player hit)
+                int playerVisibleTotal = p1.getVisibleHandTotal();
+                if (!cpuAI.shouldHit(cpu.calcHandVal(), playerVisibleTotal)) {
+                    cpuStood = true;
+                    System.out.println("CPU stands.");
+                } else {
+                    System.out.println("CPU draws a card.");
+                    cpu.hit(myDeck);
+                    int cpuVal = cpu.calcHandVal();
+                    if (cpuVal > 21) {
+                        System.out.println("CPU hand: " + cpuVal + " → CPU BUSTS!");
+                        System.out.println("You win!");
+                        scanner.close();
+                        return;
+                    }
+                }
+            } else if (!cpuStood && playerStood) {
+                // Player already stood, CPU continues until it stands or busts
+                int playerVisibleTotal = p1.getVisibleHandTotal();
+                while (cpuAI.shouldHit(cpu.calcHandVal(), playerVisibleTotal)) {
+                    System.out.println("CPU draws a card.");
+                    cpu.hit(myDeck);
+                    int cpuVal = cpu.calcHandVal();
+                    if (cpuVal > 21) {
+                        System.out.println("CPU hand: " + cpuVal + " → CPU BUSTS!");
+                        System.out.println("You win!");
+                        scanner.close();
+                        return;
+                    }
+                }
+                cpuStood = true;
+                System.out.println("CPU stands.");
             }
         }
 
-        // CPU turn
-        int playerVisibleTotal = p1.getVisibleHandTotal();
-        while (cpuAI.shouldHit(cpu.calcHandVal(), playerVisibleTotal)) {
-            cpu.hit(myDeck);
-            if (cpu.calcHandVal() > 21) {
-                System.out.println("CPU busts!");
-                break;
-            }
-        }
-
-        // Final evaluation
+        // Both stood – evaluate final hands
         int pVal = p1.calcHandVal();
         int cpuVal = cpu.calcHandVal();
 

@@ -25,6 +25,10 @@ public class NumberedDeck {
         return theDeck.remove(0);
     }
 
+    public int winSU(){
+        return 21;
+    }
+
     public void resetDeck() {
         theDeck.clear();
         for (int i = 1; i <= 11; i++) {

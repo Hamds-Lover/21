@@ -7,6 +7,10 @@ public class Player {
     public void hit(NumberedDeck deck) {
         hand.add(deck.deal());
     }
+//for ai debug purposes
+    public void hitWin(NumberedDeck deck){
+        hand.add(deck.winSU());
+    }
 
     public int calcHandVal() {
         int handVal = 0;
