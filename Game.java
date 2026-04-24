@@ -4,10 +4,11 @@ public class Game {
     private NumberedDeck myDeck = new NumberedDeck();
     private Player p1 = new Player();
     private Player cpu = new Player();
-    private final int CPU_STAND_THRESHOLD = 17;
+    private CpuDecisionMaker cpuAI = new CpuDecisionMaker();
+    private GameEvaluator evaluator = new GameEvaluator();
 
     public void playGame() {
-        myDeck.resetDeck();  // ensures fresh deck
+        myDeck.resetDeck();
         p1.clearHand();
         cpu.clearHand();
 
@@ -17,11 +18,10 @@ public class Game {
         p1.hit(myDeck);
         cpu.hit(myDeck);
 
-        Scanner myChoice = new Scanner(System.in);
-        boolean playerTurn = true;
+        Scanner scanner = new Scanner(System.in);
 
-        // Player's turn
-        while (playerTurn) {
+        // Player turn
+        while (true) {
             System.out.print("CPU hand: ");
             cpu.showHiddenHand();
             p1.viewHand();
@@ -29,7 +29,7 @@ public class Game {
             System.out.println("1 - Hit");
             System.out.println("2 - Stand");
             System.out.print("Enter choice: ");
-            int choice = myChoice.nextInt();
+            int choice = scanner.nextInt();
 
             if (choice == 1) {
                 System.out.println("You drew a card.");
@@ -38,16 +38,17 @@ public class Game {
                 if (pVal > 21) {
                     System.out.println("Your hand: " + pVal + " → BUST!");
                     System.out.println("You lose!");
-                    myChoice.close();
+                    scanner.close();
                     return;
                 }
             } else {
-                playerTurn = false;
+                break;
             }
         }
 
-        // CPU's turn
-        while (cpu.calcHandVal() < CPU_STAND_THRESHOLD) {
+        // CPU turn
+        int playerVisibleTotal = p1.getVisibleHandTotal();
+        while (cpuAI.shouldHit(cpu.calcHandVal(), playerVisibleTotal)) {
             cpu.hit(myDeck);
             if (cpu.calcHandVal() > 21) {
                 System.out.println("CPU busts!");
@@ -65,23 +66,25 @@ public class Game {
         System.out.print("CPU hand: "); cpu.viewHand();
         System.out.println("CPU total: " + cpuVal);
 
-        // Clean win/loss logic
-        if (pVal > 21) {
-            System.out.println("You lose! (Bust)");
-        } else if (cpuVal > 21) {
-            System.out.println("You win! CPU busted.");
-        } else if (pVal == 21 && cpuVal != 21) {
-            System.out.println("You win! Blackjack!");
-        } else if (cpuVal == 21 && pVal != 21) {
-            System.out.println("You lose! CPU has 21.");
-        } else if (pVal == cpuVal) {
-            System.out.println("Push! It's a tie.");
-        } else if (pVal > cpuVal) {
-            System.out.println("You win!");
-        } else {
-            System.out.println("You lose!");
+        GameResult result = evaluator.evaluate(pVal, cpuVal);
+        switch (result) {
+            case PLAYER_BUST:
+                System.out.println("You lose! (Bust)");
+                break;
+            case CPU_BUST:
+                System.out.println("You win! CPU busted.");
+                break;
+            case PLAYER_WIN:
+                System.out.println("You win!");
+                break;
+            case CPU_WIN:
+                System.out.println("You lose!");
+                break;
+            case TIE:
+                System.out.println("Push! It's a tie.");
+                break;
         }
 
-        myChoice.close();
+        scanner.close();
     }
 }

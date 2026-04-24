@@ -31,4 +31,13 @@ public class Player {
     public void clearHand() {
         hand.clear();
     }
+
+        // Visible hand for player
+    public int getVisibleHandTotal() {
+        int total = 0;
+        for (int i = 1; i < hand.size(); i++) { // skip first card (face down)
+            total += hand.get(i);
+        }
+        return total;
+    }
 }
