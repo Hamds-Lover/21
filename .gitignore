@@ -10,3 +10,6 @@ Extras.java
 
 # Allow the gitignore itself
 !/.gitignore
+
+# Allow the readme.md
+!*.md
