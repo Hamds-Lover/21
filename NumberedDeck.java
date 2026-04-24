@@ -3,16 +3,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NumberedDeck {
-    // deck var and init
     private List<Integer> theDeck = new ArrayList<>();
 
-    public NumberedDeck(){
-        for (int i = 1; i<=11; i++) {
-            theDeck.add(i);
-        }
+    public NumberedDeck() {
+        resetDeck();
     }
 
-    // methods
     public void shuffleDeck() {
         Collections.shuffle(theDeck);
     }
@@ -21,11 +17,23 @@ public class NumberedDeck {
         System.out.println(theDeck);
     }
 
-    public int deal(){
+    public int deal() {
+        if (theDeck.isEmpty()) {
+            System.out.println("Deck empty! Resetting...");
+            resetDeck();
+        }
         return theDeck.remove(0);
     }
 
-    public void resetDeck(){
-        
+    public void resetDeck() {
+        theDeck.clear();
+        for (int i = 1; i <= 11; i++) {
+            theDeck.add(i);
+        }
+        shuffleDeck();
+    }
+
+    public boolean isEmpty() {
+        return theDeck.isEmpty();
     }
 }
