@@ -24,7 +24,7 @@ public class NumberedDeck {
         }
         return theDeck.remove(0);
     }
-
+//for ai debug purposes
     public int winSU(){
         return 21;
     }
